@@ -1,0 +1,20 @@
+# Python
+backend/.venv/
+__pycache__/
+*.pyc
+
+# Data / runtime artifacts
+backend/data/app.db
+backend/data/snapshots/*
+!backend/data/snapshots/.gitkeep
+backend/data/test_videos/
+
+# Env
+backend/.env
+
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+
+# OS
+.DS_Store

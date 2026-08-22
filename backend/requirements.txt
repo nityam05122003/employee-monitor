@@ -1,0 +1,12 @@
+# --- Phase 1: backend skeleton, DB, webcam streaming ---
+fastapi
+uvicorn[standard]
+python-multipart
+pydantic-settings
+sqlalchemy
+opencv-python
+
+# --- Phase 2: InsightFace recognition ---
+insightface
+onnxruntime
+numpy
