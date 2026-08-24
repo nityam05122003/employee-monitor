@@ -25,6 +25,20 @@ export async function fetchCameras() {
   return handleResponse(res);
 }
 
+export async function loadCameraFromUrl(sourceId, url) {
+  const res = await fetch(`${API_BASE}/cameras/${sourceId}/load_url`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url }),
+  });
+  return handleResponse(res);
+}
+
+export async function clearCamera(sourceId) {
+  const res = await fetch(`${API_BASE}/cameras/${sourceId}/clear`, { method: "POST" });
+  return handleResponse(res);
+}
+
 export function snapshotUrl(filename) {
   return `${API_BASE}/snapshots/${filename}`;
 }

@@ -31,7 +31,7 @@ export default function EnrollForm({ onEnrolled }) {
   const loading = status?.type === "loading";
 
   return (
-    <div className="panel">
+    <div className="panel" style={{ "--accent-color": "#7c3aed" }}>
       <h2>Enroll Employee</h2>
       <form onSubmit={handleSubmit} className="enroll-form">
         <input

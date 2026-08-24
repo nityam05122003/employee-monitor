@@ -53,5 +53,10 @@ class AlertOut(BaseModel):
 class CameraOut(BaseModel):
     id: str
     label: str
+    kind: str
     is_running: bool
     error: str | None
+
+
+class LoadUrlRequest(BaseModel):
+    url: str

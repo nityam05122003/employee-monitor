@@ -11,6 +11,7 @@ export default function App() {
   const [attendance, setAttendance] = useState([]);
   const [alerts, setAlerts] = useState([]);
   const [cameras, setCameras] = useState([]);
+  const [liveStatus, setLiveStatus] = useState("connecting");
 
   const loadAttendance = useCallback(() => {
     fetchAttendanceToday().then(setAttendance).catch(console.error);
@@ -38,13 +39,16 @@ export default function App() {
     return () => clearInterval(interval);
   }, [loadAttendance, loadAlerts, loadCameras]);
 
-  useLiveEvents((event) => {
-    if (event.type === "attendance") {
-      loadAttendance();
-    } else if (event.type === "alert") {
-      setAlerts((prev) => [event.payload, ...prev]);
-    }
-  });
+  useLiveEvents(
+    (event) => {
+      if (event.type === "attendance") {
+        loadAttendance();
+      } else if (event.type === "alert") {
+        setAlerts((prev) => [event.payload, ...prev]);
+      }
+    },
+    setLiveStatus,
+  );
 
   async function handleAcknowledge(alertId) {
     const updated = await acknowledgeAlert(alertId);
@@ -54,13 +58,22 @@ export default function App() {
   return (
     <div className="app">
       <header className="app-header">
+        <div className="app-logo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M12 12a4 4 0 100-8 4 4 0 000 8zM4 20c0-3.5 3.5-6 8-6s8 2.5 8 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
         <h1>Employee Monitor</h1>
+        <div className={`live-indicator ${liveStatus === "connected" ? "" : "offline"}`}>
+          <span className="live-dot" />
+          {liveStatus === "connected" ? "Live" : "Reconnecting..."}
+        </div>
       </header>
       <main className="dashboard">
         <div className="column">
           <div className="camera-grid">
             {cameras.map((cam) => (
-              <VideoFeed key={cam.id} camera={cam} />
+              <VideoFeed key={cam.id} camera={cam} onCameraChanged={loadCameras} />
             ))}
           </div>
           <EnrollForm onEnrolled={loadAttendance} />

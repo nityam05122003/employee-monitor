@@ -41,9 +41,9 @@ def _source_kind(source: str) -> str:
 
 
 class CameraWorker:
-    def __init__(self, source: str = None):
-        self.source = source if source is not None else settings.CAMERA_SOURCE
-        self._kind = _source_kind(self.source)
+    def __init__(self, source: str = ""):
+        self.source = source
+        self._kind = _source_kind(self.source) if self.source else None
         self._cap = None
         self._lock = threading.Lock()
         self._latest_frame = None

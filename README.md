@@ -101,7 +101,7 @@ index, an RTSP/network CCTV URL, or a path to a video file (handy for
 testing/demos - it loops automatically). Mix and match freely:
 
 ```bash
-CAMERA_SOURCES=[{"id":"laptop","label":"Laptop Webcam","source":"0"},{"id":"cctv","label":"Office CCTV","source":"rtsp://user:pass@192.168.1.50:554/stream1"},{"id":"sample","label":"Sample Video","source":"data/test_videos/cctv_sample.mp4"}]
+CAMERA_SOURCES=[{"id":"laptop","label":"Laptop Webcam","source":"0"},{"id":"cctv","label":"Office CCTV","source":"rtsp://user:pass@192.168.1.50:554/stream1"},{"id":"custom","label":"Custom Video","source":"","kind":"custom"}]
 ```
 
 If a source fails to start (wrong RTSP URL, camera unreachable, etc.) it
@@ -109,16 +109,20 @@ just shows "Camera unavailable" on its own panel with the error message -
 the other cameras keep working normally. Check `GET /cameras` for each
 source's live status.
 
-**No physical camera to test with?** Point a source at a downloaded video
-file instead - useful for testing detection/recognition without a live feed:
+### Testing with any video (no physical camera needed)
 
+A `"kind":"custom"` entry (empty `source`) shows a **paste-a-video-URL** box
+on its dashboard panel instead of a video, at any time - YouTube links and
+most direct video URLs both work. Behind the scenes: `POST
+/cameras/{id}/load_url` (body `{"url": "..."}`) downloads the video via
+`yt-dlp` into `backend/data/custom_videos/{id}.*`, then points that
+camera at the downloaded file - detection starts on it automatically. You
+can paste a new URL into the same box at any time to swap the video out.
+
+Requires `yt-dlp` on the machine running the backend:
 ```bash
-# yt-dlp works well for grabbing a quick test clip
 brew install yt-dlp
-yt-dlp -f "best[height<=720]" -o "backend/data/test_videos/sample.%(ext)s" "<video URL>"
 ```
-Then add `{"id":"sample","label":"Sample Video","source":"backend/data/test_videos/sample.mp4"}`
-to `CAMERA_SOURCES`.
 
 **Finding your camera's RTSP URL**: this varies by brand - check the
 camera's app/web settings (usually under "Advanced," "Network," or "RTSP")

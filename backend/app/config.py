@@ -11,6 +11,11 @@ class CameraSourceConfig(BaseModel):
     id: str          # short slug, used in URLs like /video_feed/{id} - keep it simple (letters/numbers/underscore)
     label: str        # human-readable name shown in the dashboard
     source: str       # "0"/"1" (local webcam) | "rtsp://..." (network CCTV) | a video file path
+    # "static" - fixed at startup from config, can't be changed from the UI.
+    # "custom" - starts unconfigured (source can be "") and the dashboard
+    # shows a "paste a video URL" box for it (POST /cameras/{id}/load_url
+    # downloads the video via yt-dlp and points this source at it).
+    kind: str = "static"
 
 
 class Settings(BaseSettings):
@@ -78,6 +83,11 @@ class Settings(BaseSettings):
     # --- Storage ---
     DATABASE_URL: str = "sqlite:///./data/app.db"
     SNAPSHOT_DIR: str = "./data/snapshots"
+    # Videos downloaded via POST /cameras/{id}/load_url land here, one file
+    # per custom camera id (overwritten each time a new URL is loaded).
+    CUSTOM_VIDEO_DIR: str = "./data/custom_videos"
+    # Max seconds to let yt-dlp spend downloading a pasted video URL.
+    CUSTOM_VIDEO_DOWNLOAD_TIMEOUT_SEC: float = 180.0
 
 
 settings = Settings()
